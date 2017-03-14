@@ -55,6 +55,22 @@ app.use((_req, res) => {
   res.sendStatus(404);
 });
 
+var ev = require('express-validation');
+
+// error handler
+app.use(function (err, req, res, next) {
+  // specific for validation errors
+  if (err instanceof ev.ValidationError) return res.status(err.status).json(err);
+
+  // other type of errors, it *might* also be a Runtime Error
+  // example handling
+  if (process.env.NODE_ENV !== 'production') {
+    return res.status(500).send(err.stack);
+  } else {
+    return res.status(500);
+  }
+});
+
 // eslint-disable-next-line max-params
 app.use((err, _req, res, _next) => {
   if (err.output && err.output.statusCode) {
