@@ -12,7 +12,7 @@ const validate = require('express-validation');
 const joi = require('joi');
 
 router.get('/token', (req, res, next) => {
-  if (req.cookies.token === undefined) {
+  if (!req.cookies.token) {
     res.send(false);
     return;
   }
@@ -26,7 +26,7 @@ router.get('/token', (req, res, next) => {
 });
 
 // use from a login page
-router.post('/token', validate(validate.post), (req, res, next) => {
+router.post('/token', (req, res, next) => {
   knex('users').where('email', req.body.email)
     .then((rows) => {
       // user is one row

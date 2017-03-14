@@ -10,7 +10,7 @@ const app = express();
 app.disable('x-powered-by');
 
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 
 switch (app.get('env')) {
@@ -53,22 +53,6 @@ app.use(users);
 
 app.use((_req, res) => {
   res.sendStatus(404);
-});
-
-var ev = require('express-validation');
-
-// error handler
-app.use(function (err, req, res, next) {
-  // specific for validation errors
-  if (err instanceof ev.ValidationError) return res.status(err.status).json(err);
-
-  // other type of errors, it *might* also be a Runtime Error
-  // example handling
-  if (process.env.NODE_ENV !== 'production') {
-    return res.status(500).send(err.stack);
-  } else {
-    return res.status(500);
-  }
 });
 
 // eslint-disable-next-line max-params
