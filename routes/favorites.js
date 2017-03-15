@@ -7,6 +7,8 @@ const knex = require('../knex');
 const checkToken = require('../auth_middleware');
 const { camelizeKeys, decamelizeKeys } = require('humps');
 const router = express.Router();
+const ev = require('express-validation');
+const validations = require('../validations/favorites');
 
 router.get('/favorites', checkToken, (req, res, next) => {
   return knex('favorites')
@@ -36,7 +38,7 @@ const prepareResponse = (row) => {
   return resp;
 };
 
-router.post('/favorites', checkToken, (req, res, next) => {
+router.post('/favorites', checkToken, ev(validations.post), (req, res, next) => {
   return knex('favorites').insert({
     user_id: req.user.userId,
     book_id: req.body.bookId,

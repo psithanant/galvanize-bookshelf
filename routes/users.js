@@ -5,6 +5,8 @@ const router = express.Router();
 const knex = require('../knex.js');
 const { camelizeKeys, decamelizeKeys } = require('humps');
 const bcrypt = require('bcrypt-as-promised');
+const ev = require('express-validation');
+const validations = require('../validations/users');
 /*
 <form method="post" action="/users"">
 Email: <input type="text" name="email"/>
@@ -13,7 +15,7 @@ Password: <input type="password" name="password"/>
 <input type="submit" name="Submit"/>
 </form>
 */
-router.post('/users', function(req, res, next) {
+router.post('/users', ev(validations.post), function(req, res, next) {
   bcrypt.hash(req.body.password, 12)
     .then((hashed_password) => {
       return knex('users')

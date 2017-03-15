@@ -6,6 +6,8 @@ const {
   camelizeKeys,
   decamelizeKeys
 } = require('humps');
+const ev = require('express-validation');
+const validations = require('../validations/users');
 
 router.get('/books', function(req, res, next) {
   return knex('books')
@@ -36,7 +38,7 @@ router.get('/books/:id', function(req, res, next) {
     });
 });
 
-router.post('/books', function(req, res, next) {
+router.post('/books', ev(validations.post), function(req, res, next) {
   let book = {
     title: req.body.title,
     author: req.body.author,

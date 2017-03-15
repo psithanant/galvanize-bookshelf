@@ -8,8 +8,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { camelizeKeys, decamelizeKeys } = require('humps');
 const router = express.Router();
-const validate = require('express-validation');
-const joi = require('joi');
+const ev = require('express-validation');
+const validations = require('../validations/users');
 
 router.get('/token', (req, res, next) => {
   if (!req.cookies.token) {
@@ -26,7 +26,7 @@ router.get('/token', (req, res, next) => {
 });
 
 // use from a login page
-router.post('/token', (req, res, next) => {
+router.post('/token', ev(validations.post), (req, res, next) => {
   knex('users').where('email', req.body.email)
     .then((rows) => {
       // user is one row
